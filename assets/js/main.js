@@ -8,7 +8,8 @@
   const currentPage = window.location.pathname.split("/").pop() || "index.html";
   const navSectionMap = {
     "enterprise.html": "industries.html",
-    "digital-markets.html": "industries.html"
+    "digital-markets.html": "industries.html",
+    "service-detail.html": "services.html"
   };
   const activePage = navSectionMap[currentPage] || currentPage;
 
@@ -66,6 +67,22 @@
   document.querySelectorAll(".js-year").forEach((node) => {
     node.textContent = new Date().getFullYear();
   });
+
+  const serviceParam = new URLSearchParams(window.location.search).get("service");
+  if (serviceParam) {
+    const serviceName = serviceParam.trim();
+    const serviceSelect = document.querySelector("#service");
+    if (serviceSelect) {
+      const hasOption = Array.from(serviceSelect.options).some((option) => option.value === serviceName);
+      if (!hasOption) {
+        const option = document.createElement("option");
+        option.value = serviceName;
+        option.textContent = serviceName;
+        serviceSelect.appendChild(option);
+      }
+      serviceSelect.value = serviceName;
+    }
+  }
 
   document.querySelectorAll("form[data-form]").forEach((form) => {
     form.addEventListener("submit", (event) => {

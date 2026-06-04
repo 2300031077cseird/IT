@@ -1229,6 +1229,156 @@ select {
   font-size: 0.94rem;
 }
 
+.mini-card.service-visual-card {
+  position: relative;
+  min-height: 390px;
+  padding: 0 0 24px;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.mini-card.service-visual-card:hover {
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(-8px);
+}
+
+.service-thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--navy);
+}
+
+.service-thumb::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(4, 24, 53, 0.12), rgba(4, 24, 53, 0.8)),
+    radial-gradient(circle at var(--shine-x, 50%) var(--shine-y, 50%), rgba(255, 255, 255, 0.26), transparent 30%);
+  opacity: 0.92;
+  transition: opacity 0.25s ease;
+}
+
+.service-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.02);
+  transition: transform 0.55s ease, filter 0.55s ease;
+}
+
+.service-visual-card:hover .service-thumb img,
+.service-detail-visual:hover img {
+  transform: scale(1.08);
+  filter: saturate(1.08) contrast(1.05);
+}
+
+.service-thumb-label {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--white);
+  font-size: 0.82rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.service-visual-card > i {
+  width: 46px;
+  height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: -23px 0 14px 22px;
+  position: relative;
+  z-index: 2;
+  color: var(--white);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 8px;
+  box-shadow: 0 14px 28px rgba(11, 99, 206, 0.24);
+}
+
+.service-visual-card h3,
+.service-visual-card p,
+.service-visual-card .link-arrow {
+  margin-left: 22px;
+  margin-right: 22px;
+}
+
+.service-visual-card h3,
+.service-visual-card p,
+.service-visual-card .link-arrow,
+.service-visual-card > i {
+  transform: translateZ(24px);
+}
+
+.service-detail-visual {
+  position: relative;
+  min-height: 320px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(220, 230, 242, 0.92);
+  box-shadow: var(--shadow-soft);
+  background: var(--navy);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.service-detail-visual:hover {
+  transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(-6px);
+}
+
+.service-detail-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(4, 24, 53, 0.78) 100%),
+    radial-gradient(circle at var(--shine-x, 50%) var(--shine-y, 50%), rgba(255, 255, 255, 0.24), transparent 34%);
+}
+
+.service-detail-visual img {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  object-fit: cover;
+  transform: scale(1.02);
+  transition: transform 0.55s ease, filter 0.55s ease;
+}
+
+.service-visual-caption {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+  z-index: 2;
+  color: var(--white);
+  transform: translateZ(32px);
+}
+
+.service-visual-caption span {
+  display: inline-flex;
+  margin-bottom: 10px;
+  color: #9edcff;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.service-visual-caption h3 {
+  margin: 0;
+  font-size: 1.45rem;
+  font-weight: 900;
+}
+
 .solution-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
