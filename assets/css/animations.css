@@ -1,0 +1,82 @@
+.fade-up-soft {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.floating-element {
+  animation: floatElement 5.5s ease-in-out infinite;
+}
+
+.pulse-ring {
+  position: relative;
+}
+
+.pulse-ring::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border: 1px solid rgba(8, 166, 223, 0.35);
+  border-radius: inherit;
+  animation: pulseRing 2.6s ease-out infinite;
+}
+
+.parallax-layer {
+  will-change: transform;
+}
+
+.reveal-line {
+  background: linear-gradient(90deg, var(--secondary), var(--primary));
+  height: 3px;
+  width: 72px;
+  transform-origin: left;
+}
+
+.card-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-shine::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.28) 46%, transparent 62%);
+  transform: translateX(-120%);
+  transition: transform 0.65s ease;
+}
+
+.card-shine:hover::before {
+  transform: translateX(120%);
+}
+
+@keyframes floatElement {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.92);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.14);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
