@@ -37,18 +37,14 @@
   }
 
   .main-nav {
-    position: fixed;
-    inset: 72px 0 auto 0;
-    max-height: calc(100vh - 72px);
-    overflow-y: auto;
-    display: none;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-    padding: 12px 20px 24px;
-    background: var(--white);
-    border-top: 1px solid var(--line);
-    box-shadow: var(--shadow);
+    top: var(--nav-popover-top, 72px);
+    right: 12px;
+    left: 12px;
+    width: auto;
+    max-height: calc(100vh - var(--nav-popover-top, 72px) - 12px);
+    display: flex;
+    padding: 14px;
+    border-radius: 8px;
   }
 
   .main-nav.is-open {
@@ -64,9 +60,9 @@
 
   .mega-menu {
     position: static;
-    display: none;
     width: 100%;
-    padding: 18px 0;
+    max-height: 0;
+    padding: 0;
     transform: none;
     opacity: 1;
     visibility: visible;
@@ -75,7 +71,8 @@
   }
 
   .nav-item.is-expanded .mega-menu {
-    display: block;
+    max-height: 1040px;
+    padding: 12px 0 16px;
   }
 
   .mega-grid {

@@ -310,26 +310,76 @@ select {
 }
 
 .main-nav {
+  position: fixed;
+  top: var(--nav-popover-top, 92px);
+  right: max(20px, calc((100vw - var(--container)) / 2));
+  z-index: 80;
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100vh - var(--nav-popover-top, 92px) - 18px);
+  overflow-y: auto;
   display: flex;
-  align-items: center;
-  gap: 2px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(220, 230, 242, 0.92);
+  border-radius: 8px;
+  box-shadow: 0 28px 90px rgba(4, 24, 53, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(14px) scale(0.98);
+  transform-origin: top right;
+  transition: opacity 0.24s ease, transform 0.24s ease, visibility 0.24s ease;
+}
+
+.main-nav.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.nav-popup-open {
+  overflow: hidden;
+}
+
+.nav-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  background: rgba(4, 24, 53, 0.44);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.24s ease, visibility 0.24s ease;
+}
+
+.nav-backdrop.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .nav-item {
-  position: relative;
+  position: static;
 }
 
 .nav-link-main {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  min-height: 78px;
-  padding: 0 11px;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 54px;
+  padding: 0;
   color: #213858;
-  font-size: 0.92rem;
+  font-size: 1rem;
   font-weight: 800;
-  border-bottom: 3px solid transparent;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  border-bottom: 1px solid var(--line);
+  transition: color 0.2s ease, border-color 0.2s ease, padding 0.2s ease;
 }
 
 .nav-link-main:hover,
@@ -339,32 +389,41 @@ select {
 }
 
 .mega-menu {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  width: min(980px, calc(100vw - 40px));
-  padding: 26px;
-  background: rgba(255, 255, 255, 0.98);
-  border: 1px solid rgba(220, 230, 242, 0.92);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  opacity: 0;
-  visibility: hidden;
-  transform: translate(-50%, 14px);
-  transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  position: static;
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: max-height 0.32s ease, padding 0.22s ease;
 }
 
 .nav-item:hover .mega-menu,
 .nav-item:focus-within .mega-menu {
   opacity: 1;
   visibility: visible;
-  transform: translate(-50%, 0);
+  transform: none;
+}
+
+.nav-item.is-expanded .mega-menu {
+  max-height: 980px;
+  padding: 14px 0 18px;
 }
 
 .mega-grid {
   display: grid;
-  grid-template-columns: 1.1fr 1fr 1fr;
-  gap: 22px;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding: 16px;
+  background: linear-gradient(180deg, rgba(244, 248, 252, 0.98), rgba(255, 255, 255, 0.98));
+  border: 1px solid var(--line);
+  border-radius: 8px;
 }
 
 .mega-panel {
@@ -374,7 +433,7 @@ select {
     linear-gradient(135deg, rgba(4, 24, 53, 0.9), rgba(11, 99, 206, 0.76)),
     url("https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=900&q=80") center/cover;
   border-radius: 8px;
-  min-height: 220px;
+  min-height: 190px;
 }
 
 .mega-panel h3 {
@@ -429,19 +488,31 @@ select {
 }
 
 .nav-cta {
+  width: 100%;
+  margin-top: 16px;
   white-space: nowrap;
 }
 
 .menu-toggle {
-  display: none;
+  display: inline-flex;
   width: 46px;
   height: 46px;
   border: 1px solid var(--line);
   border-radius: 6px;
-  color: var(--navy);
-  background: var(--white);
+  color: var(--white);
+  background: var(--navy);
+  border-color: var(--navy);
   align-items: center;
   justify-content: center;
+  box-shadow: 0 12px 28px rgba(4, 24, 53, 0.14);
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.menu-toggle:hover,
+.menu-toggle:focus-visible {
+  background: var(--primary);
+  box-shadow: 0 16px 34px rgba(11, 99, 206, 0.24);
+  transform: translateY(-1px);
 }
 
 .hero {

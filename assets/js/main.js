@@ -5,6 +5,7 @@
   const menuToggle = document.querySelector(".menu-toggle");
   const mainNav = document.querySelector(".main-nav");
   const navItems = document.querySelectorAll(".nav-item.has-mega");
+  const navBackdrop = document.createElement("div");
   const currentPage = window.location.pathname.split("/").pop() || "index.html";
   const navSectionMap = {
     "enterprise.html": "industries.html",
@@ -29,21 +30,78 @@
   setHeaderState();
   window.addEventListener("scroll", setHeaderState, { passive: true });
 
+  const syncMenuPosition = () => {
+    if (!header) return;
+    const headerBottom = Math.max(0, Math.round(header.getBoundingClientRect().bottom));
+    document.documentElement.style.setProperty("--nav-popover-top", `${headerBottom}px`);
+  };
+
+  const setMenuState = (isOpen) => {
+    if (!menuToggle || !mainNav) return;
+    syncMenuPosition();
+    mainNav.classList.toggle("is-open", isOpen);
+    navBackdrop.classList.toggle("is-open", isOpen);
+    document.body.classList.toggle("nav-popup-open", isOpen);
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+    menuToggle.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
+    menuToggle.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+
+    if (!isOpen) {
+      navItems.forEach((item) => {
+        item.classList.remove("is-expanded");
+        item.querySelector(".nav-link-main")?.setAttribute("aria-expanded", "false");
+      });
+    }
+  };
+
+  navBackdrop.className = "nav-backdrop";
+  navBackdrop.setAttribute("aria-hidden", "true");
+  document.body.appendChild(navBackdrop);
+
   if (menuToggle && mainNav) {
+    syncMenuPosition();
     menuToggle.addEventListener("click", () => {
-      const isOpen = mainNav.classList.toggle("is-open");
-      menuToggle.setAttribute("aria-expanded", String(isOpen));
-      menuToggle.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+      setMenuState(!mainNav.classList.contains("is-open"));
+    });
+
+    navBackdrop.addEventListener("click", () => setMenuState(false));
+
+    window.addEventListener("resize", syncMenuPosition);
+    window.addEventListener("scroll", () => {
+      if (mainNav.classList.contains("is-open")) syncMenuPosition();
+    }, { passive: true });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && mainNav.classList.contains("is-open")) {
+        setMenuState(false);
+        menuToggle.focus();
+      }
+    });
+
+    mainNav.addEventListener("click", (event) => {
+      const link = event.target.closest("a");
+      if (!link) return;
+      const parentMega = link.closest(".nav-item.has-mega");
+      if (parentMega && link.classList.contains("nav-link-main")) return;
+      setMenuState(false);
     });
   }
 
   navItems.forEach((item) => {
     const trigger = item.querySelector(".nav-link-main");
     if (!trigger) return;
+    trigger.setAttribute("aria-haspopup", "true");
+    trigger.setAttribute("aria-expanded", "false");
     trigger.addEventListener("click", (event) => {
-      if (window.matchMedia("(max-width: 991px)").matches) {
+      if (mainNav?.classList.contains("is-open")) {
         event.preventDefault();
-        item.classList.toggle("is-expanded");
+        const shouldExpand = !item.classList.contains("is-expanded");
+        navItems.forEach((otherItem) => {
+          otherItem.classList.remove("is-expanded");
+          otherItem.querySelector(".nav-link-main")?.setAttribute("aria-expanded", "false");
+        });
+        item.classList.toggle("is-expanded", shouldExpand);
+        trigger.setAttribute("aria-expanded", String(shouldExpand));
       }
     });
   });
@@ -57,9 +115,7 @@
       event.preventDefault();
       target.scrollIntoView({ behavior: "smooth", block: "start" });
       if (mainNav?.classList.contains("is-open")) {
-        mainNav.classList.remove("is-open");
-        menuToggle?.setAttribute("aria-expanded", "false");
-        if (menuToggle) menuToggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
+        setMenuState(false);
       }
     });
   });
