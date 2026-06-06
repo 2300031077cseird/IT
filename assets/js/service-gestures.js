@@ -41,9 +41,11 @@
     const card = link.closest(".mini-card");
     const slug = getServiceSlug(link.href);
     const meta = slug ? serviceImages[slug] : null;
-    if (!card || !meta || card.querySelector(".service-thumb")) return;
+    if (!card || !meta) return;
 
     card.classList.add("service-visual-card", "card-shine");
+    if (card.querySelector(".service-thumb")) return;
+
     const title = card.querySelector("h3")?.textContent?.trim() || meta[0];
     const thumb = document.createElement("div");
     thumb.className = "service-thumb";

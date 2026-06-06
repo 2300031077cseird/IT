@@ -1362,6 +1362,12 @@ select {
   text-transform: uppercase;
 }
 
+.service-thumb-label i {
+  color: currentColor;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
 .service-visual-card > i {
   width: 46px;
   height: 46px;

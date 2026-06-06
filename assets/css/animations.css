@@ -114,6 +114,32 @@
   transform: translate3d(0, 0, 0) scale(1);
 }
 
+.svt-service-fade {
+  opacity: 0;
+  transition: opacity 0.9s ease;
+  will-change: opacity;
+}
+
+.svt-service-fade.is-faded-in,
+.svt-service-fade.in-view {
+  opacity: 1;
+}
+
+.svt-local-animations .svt-service-fade.svt-reveal,
+.svt-local-animations .svt-service-fade.svt-reveal[data-aos],
+.svt-local-animations .svt-service-fade.svt-reveal[data-aos="fade-up"],
+.svt-local-animations .svt-service-fade.svt-reveal[data-aos="fade-left"],
+.svt-local-animations .svt-service-fade.svt-reveal[data-aos="fade-right"],
+.svt-local-animations .svt-service-fade.svt-reveal[data-aos="zoom-in"] {
+  transform: none;
+  transition: opacity 0.9s ease;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.svt-local-animations .svt-service-fade.svt-reveal.in-view {
+  transform: none;
+}
+
 .svt-media-reveal {
   position: relative;
   overflow: hidden;

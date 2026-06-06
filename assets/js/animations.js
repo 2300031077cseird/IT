@@ -32,11 +32,11 @@
     ".story-image",
     ".industry-card",
     ".blog-card img",
-    ".service-thumb",
     ".service-detail-visual",
     ".solution-card",
     ".case-image"
   ].join(",");
+  const serviceFadeSelector = ".service-thumb, .service-visual-card";
 
   const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const all = (selector) => Array.from(document.querySelectorAll(selector));
@@ -77,11 +77,14 @@
     if (element.matches(mediaSelector)) {
       element.classList.add("is-revealed");
     }
+    if (element.matches(serviceFadeSelector)) {
+      element.classList.add("is-faded-in");
+    }
   };
 
   const releaseVisibleElements = () => {
     const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-    unique([...all("[data-aos]"), ...all(revealSelector)]).forEach((element) => {
+    unique([...all("[data-aos]"), ...all(revealSelector), ...all(mediaSelector), ...all(serviceFadeSelector)]).forEach((element) => {
       const rect = element.getBoundingClientRect();
       if (rect.bottom < 0 || rect.top > viewportHeight * 0.96) return;
 
@@ -90,6 +93,12 @@
       }
 
       element.classList.add("aos-animate", "in-view");
+      if (element.matches(mediaSelector)) {
+        element.classList.add("is-revealed");
+      }
+      if (element.matches(serviceFadeSelector)) {
+        element.classList.add("is-faded-in");
+      }
       element.style.opacity = "1";
       element.style.visibility = "visible";
       element.style.removeProperty("transform");
@@ -114,7 +123,7 @@
 
   const revealImmediately = () => {
     document.body.classList.add("svt-reduced-motion");
-    unique([...all("[data-aos]"), ...all(revealSelector), ...all(mediaSelector)]).forEach((element) => {
+    unique([...all("[data-aos]"), ...all(revealSelector), ...all(mediaSelector), ...all(serviceFadeSelector)]).forEach((element) => {
       revealElement(element);
       element.classList.remove("svt-reveal");
     });
@@ -154,12 +163,15 @@
       section.classList.add("section-animated");
     });
 
-    const revealItems = unique([...all("[data-aos]"), ...all(revealSelector), ...all(mediaSelector)]);
+    const revealItems = unique([...all("[data-aos]"), ...all(revealSelector), ...all(mediaSelector), ...all(serviceFadeSelector)]);
     revealItems.forEach((element, index) => {
       element.classList.add("svt-reveal");
       element.style.setProperty("--reveal-delay", `${delayFor(element, index)}ms`);
       if (element.matches(mediaSelector)) {
         element.classList.add("svt-media-reveal");
+      }
+      if (element.matches(serviceFadeSelector)) {
+        element.classList.add("svt-service-fade");
       }
     });
 
@@ -318,7 +330,7 @@
       });
     });
 
-    ScrollTrigger.batch(".service-card, .mini-card, .enterprise-card, .solution-card, .story-card, .blog-card, .job-card, .why-card, .case-detail", {
+    ScrollTrigger.batch(".service-card, .mini-card:not(.service-visual-card), .enterprise-card, .solution-card, .story-card, .blog-card, .job-card, .why-card, .case-detail", {
       interval: 0.08,
       batchMax: 4,
       start: "top 88%",
@@ -332,6 +344,24 @@
           stagger: 0.09,
           ease: "power3.out",
           clearProps: "transform,opacity,visibility"
+        });
+      }
+    });
+
+    ScrollTrigger.batch(".service-visual-card", {
+      interval: 0.08,
+      batchMax: 4,
+      start: "top 88%",
+      once: true,
+      onEnter: (batch) => {
+        gsap.from(batch, {
+          autoAlpha: 0,
+          duration: 0.85,
+          stagger: 0.08,
+          ease: "power2.out",
+          clearProps: "opacity,visibility",
+          onStart: () => batch.forEach((item) => item.classList.add("is-faded-in")),
+          onComplete: () => batch.forEach((item) => item.classList.add("is-faded-in"))
         });
       }
     });
@@ -354,6 +384,28 @@
         clearProps: "transform,opacity,visibility",
         scrollTrigger: {
           trigger: media,
+          start: "top 90%",
+          once: true
+        }
+      });
+    });
+
+    gsap.utils.toArray(".service-thumb").forEach((thumb) => {
+      thumb.classList.add("svt-service-fade");
+      ScrollTrigger.create({
+        trigger: thumb,
+        start: "top 88%",
+        once: true,
+        onEnter: () => thumb.classList.add("is-faded-in")
+      });
+
+      gsap.from(thumb, {
+        autoAlpha: 0,
+        duration: 0.95,
+        ease: "power2.out",
+        clearProps: "opacity,visibility",
+        scrollTrigger: {
+          trigger: thumb,
           start: "top 90%",
           once: true
         }
